@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bank Brnaces</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.6/css/jquery.dataTables.css">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src="https//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
+    <script src="https://cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mockjax/1.6.2/jquery.mockjax.min.js"></script>
+    <style>
+       body{
+
+    background-color: #eee; 
+}
+
+table th , table td{
+    text-align: center;
+}
+
+table tr:nth-child(even){
+    background-color: #e4e3e3
+}
+
+th {
+  background: #333;
+  color: #fff;
+}
+
+.pagination {
+  margin: 0;
+}
+
+.pagination li:hover{
+    cursor: pointer;
+}
+
+.header_wrap {
+  padding:30px 0;
+}
+.num_rows {
+  width: 20%;
+  float:left;
+}
+.tb_search{
+  width: 20%;
+  float:right;
+}
+.pagination-container {
+  width: 70%;
+  float:left;
+}
+
+.rows_count {
+  width: 20%;
+  float:right;
+  text-align:right;
+  color: #999;
+}
+.odd{
+    display: none;
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="panel">
+            <p>
+                <b>Filter:</b><br />
+                <select id="example-select">
+                    <option selected>Chris</option>
+                    <option>Jane</option>
+                    <option>John</option>
+                    <option>Jose</option>
+                </select>
+            </p>
+    
+        <table id="example" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+        </table>
+        </div>
+    </div>
+    <script>
+           $(document).ready(function () {
+                // FOR DEMONSTRATION ONLY
+               // AJAX emulation 
+               $.mockjax({
+                   url: '/test/0',
+                   responseTime: 200,
+                   response: function (settings) {
+                       var val = settings.data.start;
+                       this.responseText = {
+                           data: {
+                               data: [],
+                               draw: settings.data.draw,
+                               recordsTotal: 1000,
+                               recordsFiltered: 1000
+                           }
+                       };
+
+                       for (var i = 0; i < settings.data.length; i++) {
+                           this.responseText.data.data.push(["A" + (i + settings.data.start + 1), i]);
+                       }
+                   }
+               });
+
+               var table = $("#example").DataTable({
+                   serverSide: true,
+                   pageLength: 5,
+                   ajax: {
+                       url: "/test/0",
+                       dataSrc: function (json) {
+                           json.draw = json.data.draw;
+                           json.recordsTotal = json.data.recordsTotal;
+                           json.recordsFiltered = json.data.recordsFiltered;
+
+                           return json.data.data;
+                       }
+                   }
+               });
+
+            });
+        
+</script>
+    
+</body>
+
+</html>
